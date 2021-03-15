@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Farmer | Registeation</title>
+	<!-- Mobile Specific Metas -->
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<!-- Font-->
+	<link rel="stylesheet" type="text/css" href="public/static/css/montserrat-font.css">
+	<link rel="stylesheet" type="text/css" href="public/static/fonts/material-design-iconic-font/css/material-design-iconic-font.min.css">
+	<!-- Main Style Css -->
+    <link rel="stylesheet" href="public/static/css/style.css"/>
+    <link rel="stylesheet" href="public/static/css/webcam.css"/>
+    <link rel="stylesheet" href="public/static/css/paper.css"/>
+	<link rel="icon" href="public/static/img/faviconmain.png" type="favicon.png"/>
+
+	<script type="text/javascript" src="public/static/js/webcam.js"></script>
+	<script>    
+		var i = 1;
+ 
+ function addFarm() {
+   i++;
+   var div = document.createElement('class');
+   var id = i;
+   div.innerHTML ='<input type="text" placeholder="Farm location ' + id + '"/>' + ' <input type="button" id="add_farm()_' + id +  ' <input type="button" id="rem_farm()_' + id + '" onclick="remfarm(this)" value="-" />';
+   document.getElementById('farms').appendChild(div);
+ }
+ 
+ function remfarm(div) {
+   document.getElementById('farms').removeChild(div.parentNode);
+   i--;
+ }
+ 
+	 </script>
+	
+</head>
+
+{% block content %}
+{% endblock %}
+
+<script>
+	// CAMERA SETTINGS.
+	Webcam.set({
+		width: 250,
+		height: 250,
+		image_format: 'jpeg',
+		jpeg_quality: 2000
+	});
+	Webcam.attach('#camera');
+
+	takeSnapshot = function (oButton) {
+		document.getElementById('camBox').style.display = 'block';
+		document.getElementById('rowid').value = oButton.id
+	}
+
+	addCamPicture = function () {
+		var rowid = document.getElementById('rowid').value;
+
+		Webcam.snap(function (data_uri) {
+			document.getElementById('div_' + rowid).innerHTML = 
+				'<img src="' + data_uri + '" id="" width="250px" height="250px" />';
+		});
+
+		document.getElementById('rowid').value = '';
+		document.getElementById('camBox').style.display = 'none';       // HIDE THE POPUP DIALOG BOX.
+	}
+</script>
+</html>
