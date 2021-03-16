@@ -8,4 +8,5 @@ echo $view->render('home/index.twig', [
     'eduLevel' => $appForm->eduLevel,
     'regions' => $appForm->region,
     'emps' => $appForm->empStatus,
+    'language' => $appForm->language,
 ]);

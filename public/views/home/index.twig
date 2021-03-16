@@ -122,10 +122,10 @@
 				
 					<div class="form-row">
 						<select name="main language">
-						    <option value="main_language">Main speaking Language</option>
-						    <option value="twi">Twi</option>
-						    <option value="english">English</option>
-						    <option value="others">Others</option>
+						    <option selected disabled>Select main speaking Language</option>
+							{% for lang in language %}
+						    <option value="{{ lang.id }}">{{ lang.status }}</option>
+							{% endfor %}
 						</select>
 						<span class="select-btn">
 						  	<i class="zmdi zmdi-chevron-down"></i>

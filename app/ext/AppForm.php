@@ -46,6 +46,19 @@ class AppForm extends DUtils
             return false;
         }
     }
+
+    // fetch employment status
+    public function language()
+    {
+        try {
+            $this->language = $this->query(
+                'SELECT * FROM farms.language'
+            )->fetchAll();
+            return count($this->language) > 0 ? $this->language : false;
+        } catch (\Throwable $th) {
+            return false;
+        }
+    }
 }
 
 ?>
