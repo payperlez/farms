@@ -8,7 +8,7 @@
 					<h2>Farmer Registration</h2>
 
 					<div class="form-group" id="camBox" style="width:100%;height:100%;">
-						<!--POPUP DIALOG BOX TO SHOW LIVE WEBCAM.-->
+						{# POPUP DIALOG BOX TO SHOW LIVE WEBCAM. #}
 						<div id="revdivshowimg" style="top:20%;text-align:center;margin:0 auto;">
 				
 							<div id="camera" style="height:auto;text-align:center;margin:0 auto;"></div>
@@ -52,7 +52,11 @@
 						<input type="text" name="community" class="community" id="community" placeholder="Community" required>
 					</div>
 					<div class="form-row">
-						<input type="text" name="region" class="region" id="region" placeholder="Region" required>
+						<select name="region">
+						    <option class="option" value="household">Household Status</option>
+						    <option class="option" value="household_status">Household Status Head</option>
+						    <option class="option" value="household_status_support">Household Status Support</option>
+						</select>
 					</div>
 					<div class="form-row">
 						<select name="Household">
@@ -92,13 +96,11 @@
 						</span>
 					</div>
 					<div class="form-row">
-						<select name="educational level">
-						    <option class="option" value="educational level">Educational Level</option>
-						    <option class="option" value="primary">Primary</option>
-						    <option class="option" value="jhs">JHS</option>
-						    <option class="option" value="shs/vocational">SHS/Vocational</option>
-						    <option class="option" value="tertiary">Tertiary</option>
-						    <option class="option" value="none">None</option>
+						<select name="edu_level">
+						 <option class="option" value="" selected disabled>Select educational leve;</option>
+						{% for edu in eduLevel %}
+						    <option class="option" value="">{{ edu.status }}</option>
+						{% endfor %}
 						</select>
 						<span class="select-btn">
 						  	<i class="zmdi zmdi-chevron-down"></i>
