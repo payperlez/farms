@@ -53,9 +53,10 @@
 					</div>
 					<div class="form-row">
 						<select name="region">
-						    <option class="option" value="household">Household Status</option>
-						    <option class="option" value="household_status">Household Status Head</option>
-						    <option class="option" value="household_status_support">Household Status Support</option>
+						    <option class="option" selected disabled>Select region</option>
+							{% for region in regions %}
+						    <option class="option" value="{{ region.regionid }}">{{ region.region }}</option>
+							{% endfor %}
 						</select>
 					</div>
 					<div class="form-row">
