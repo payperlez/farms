@@ -1,5 +1,5 @@
 <?php
-	/**
+/**
  * @author      Desmond Evans Kwachie Jr <iamdesmondjr@gmail.com>
  * @copyright   Copyright (C), 2019 Desmond Evans Kwachie Jr.
  * @license     MIT LICENSE (https://opensource.org/licenses/MIT)
@@ -9,146 +9,181 @@
  * @category    Database
  * @example
  * $this->query('INSERT INTO tb (col1, col2, col3) VALUES(?,?,?)', $var1, $var2, $var3);
- * 
+ *
  * for transactions
  * try{
  *  $this->beginTransaction();
- * 
+ *
  *  //statements ...
- * 
+ *
  * $this->commit();
  * } catch(Exception $e){
  *  $this->rollback();
  * }
- * 
- * 
+ *
+ *
  */
-require_once('Sms.php');
-class DUtils extends SmsAlert{
+require_once 'Sms.php';
+class DUtils extends SmsAlert
+{
     protected $connection;
-	protected $query;
-	public $query_count = 0;
-	
-	public function __construct($dbhost = '127.0.0.1', $dbuser = 'root', $dbpass = 'Programmer@422', $dbname = 'farms') {
-		$this->connection = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
-		if ($this->connection->connect_error) {
-			die('Failed to connect to MySQL - ' . $this->connection->connect_error);
-		}
-		//$this->connection->set_charset($charset);
-	}
-	
-    public function query($query) {
-		if ($this->query = $this->connection->prepare($query)) {
+    protected $query;
+    public $query_count = 0;
+
+    public function __construct(
+        $dbhost = '127.0.0.1',
+        $dbuser = 'root',
+        $dbpass = 'Programmer@422',
+        $dbname = 'farms'
+    ) {
+        $this->connection = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
+        if ($this->connection->connect_error) {
+            die(
+                'Failed to connect to MySQL - ' .
+                    $this->connection->connect_error
+            );
+        }
+        //$this->connection->set_charset($charset);
+    }
+
+    public function query($query)
+    {
+        if ($this->query = $this->connection->prepare($query)) {
             if (func_num_args() > 1) {
                 $x = func_get_args();
                 $args = array_slice($x, 1);
-				$types = '';
-                $args_ref = array();
+                $types = '';
+                $args_ref = [];
                 foreach ($args as $k => &$arg) {
-					if (is_array($args[$k])) {
-						foreach ($args[$k] as $j => &$a) {
-							$types .= $this->_gettype($args[$k][$j]);
-							$args_ref[] = &$a;
-						}
-					} else {
-	                	$types .= $this->_gettype($args[$k]);
-	                    $args_ref[] = &$arg;
-					}
+                    if (is_array($args[$k])) {
+                        foreach ($args[$k] as $j => &$a) {
+                            $types .= $this->_gettype($args[$k][$j]);
+                            $args_ref[] = &$a;
+                        }
+                    } else {
+                        $types .= $this->_gettype($args[$k]);
+                        $args_ref[] = &$arg;
+                    }
                 }
-				array_unshift($args_ref, $types);
-                call_user_func_array(array($this->query, 'bind_param'), $args_ref);
+                array_unshift($args_ref, $types);
+                call_user_func_array([$this->query, 'bind_param'], $args_ref);
             }
             $this->query->execute();
 
-           	if ($this->query->errno) {
-				die('Unable to process MySQL query (check your params) - ' . $this->query->error);
-           	}
-			$this->query_count++;
+            if ($this->query->errno) {
+                die(
+                    'Unable to process MySQL query (check your params) - ' .
+                        $this->query->error
+                );
+            }
+            $this->query_count++;
         } else {
-            die('Unable to prepare statement (check your syntax) - ' . $this->connection->error);
+            die(
+                'Unable to prepare statement (check your syntax) - ' .
+                    $this->connection->error
+            );
         }
-		return $this;
+        return $this;
     }
 
-	public function fetchAll() {
-	    $params = array();
-	    $meta = $this->query->result_metadata();
-	    while ($field = $meta->fetch_field()) {
-	        $params[] = &$row[$field->name];
-	    }
-	    call_user_func_array(array($this->query, 'bind_result'), $params);
-        $result = array();
+    public function fetchAll()
+    {
+        $params = [];
+        $meta = $this->query->result_metadata();
+        while ($field = $meta->fetch_field()) {
+            $params[] = &$row[$field->name];
+        }
+        call_user_func_array([$this->query, 'bind_result'], $params);
+        $result = [];
         while ($this->query->fetch()) {
-            $r = array();
+            $r = [];
             foreach ($row as $key => $val) {
                 $r[$key] = $val;
             }
             $result[] = $r;
         }
         $this->query->close();
-		return $result;
-	}
+        return $result;
+    }
 
-	public function fetchArray() {
-	    $params = array();
-	    $meta = $this->query->result_metadata();
-	    while ($field = $meta->fetch_field()) {
-	        $params[] = &$row[$field->name];
-	    }
-	    call_user_func_array(array($this->query, 'bind_result'), $params);
-        $result = array();
-		while ($this->query->fetch()) {
-			foreach ($row as $key => $val) {
-				$result[$key] = $val;
-			}
-		}
+    public function fetchArray()
+    {
+        $params = [];
+        $meta = $this->query->result_metadata();
+        while ($field = $meta->fetch_field()) {
+            $params[] = &$row[$field->name];
+        }
+        call_user_func_array([$this->query, 'bind_result'], $params);
+        $result = [];
+        while ($this->query->fetch()) {
+            foreach ($row as $key => $val) {
+                $result[$key] = $val;
+            }
+        }
         $this->query->close();
-		return $result;
-	}
-	
-	public function numRows() {
-		$this->query->store_result();
-		return $this->query->num_rows;
-	}
+        return $result;
+    }
 
-	public function close() {
-		return $this->connection->close();
-	}
+    public function numRows()
+    {
+        $this->query->store_result();
+        return $this->query->num_rows;
+    }
 
-	public function affectedRows() {
-		return $this->query->affected_rows;
-	}
+    public function close()
+    {
+        return $this->connection->close();
+    }
 
-	public function lastInserted(){
-		return $this->query->insert_id;
-	}
+    public function affectedRows()
+    {
+        return $this->query->affected_rows;
+    }
 
-	private function _gettype($var) {
-	    if(is_string($var)) return 's';
-	    if(is_float($var)) return 'd';
-	    if(is_int($var)) return 'i';
-	    return 'b';
-	}
+    public function lastInserted()
+    {
+        return $this->query->insert_id;
+    }
 
-	public function exist($query, $data){
-		$stmt = $this->query($query, $data);
-		return $this->numRows($stmt);
-		$this->query->close();
+    private function _gettype($var)
+    {
+        if (is_string($var)) {
+            return 's';
+        }
+        if (is_float($var)) {
+            return 'd';
+        }
+        if (is_int($var)) {
+            return 'i';
+        }
+        return 'b';
+    }
 
-	}
+    public function exist($query, $data)
+    {
+        $stmt = $this->query($query, $data);
+        return $this->numRows($stmt);
+        $this->query->close();
+    }
 
-	public function num_format($number){
-			return number_format($number,2, '.', ',');
-		}
+    public function num_format($number)
+    {
+        return number_format($number, 2, '.', ',');
+    }
 
-	/**
+    /**
      * @param $input
      * @param $length
      * @param bool|true $ellipses
      * @param bool|true $strip_html
      * @return string
      */
-    public function trim_text($input, $length, $ellipses = true, $strip_html = true) {
+    public function trim_text(
+        $input,
+        $length,
+        $ellipses = true,
+        $strip_html = true
+    ) {
         if ($strip_html === true) {
             $input = strip_tags($input);
         }
@@ -167,12 +202,13 @@ class DUtils extends SmsAlert{
         return $trimmed_text;
     }
 
-     /**
+    /**
      * redirect - Shortcut for a page redirect
      *
      * @param string $url
      */
-    public function redirect($url) {
+    public function redirect($url)
+    {
         header("Location: $url");
         exit(0);
     }
@@ -184,26 +220,33 @@ class DUtils extends SmsAlert{
      *
      *
      */
-    public function debug($data = array()){
+    public function debug($data = [])
+    {
         echo "<pre style='background-color:#222; color: green;padding:20px;>'";
         print_r($data);
-        echo "</pre>";
+        echo '</pre>';
         die();
     }
 
-    public function sort_multi_array($arr, $key){
-        uasort($arr, function($i, $j){
+    public function sort_multi_array($arr, $key)
+    {
+        uasort($arr, function ($i, $j) {
             $a = $i[$key];
             $b = $j[$key];
-            if($a == $b) return 0;
-            elseif($a > $b) return 1;
-            else return -1;
+            if ($a == $b) {
+                return 0;
+            } elseif ($a > $b) {
+                return 1;
+            } else {
+                return -1;
+            }
         });
     }
 
     // for password hashing
-    public function hash_value($algo, $data, $salt = null) {
-        if(is_null($salt) === true) {
+    public function hash_value($algo, $data, $salt = null)
+    {
+        if (is_null($salt) === true) {
             $context = hash_init($algo);
             hash_update($context, $data);
             return hash_final($context);
@@ -214,10 +257,11 @@ class DUtils extends SmsAlert{
         }
     }
 
-     /**
+    /**
      * beginTransaction - Overloading default method
      */
-    public function beginTransaction() {
+    public function beginTransaction()
+    {
         $this->connection->begin_transaction();
         $this->activeTransaction = true;
     }
@@ -225,8 +269,9 @@ class DUtils extends SmsAlert{
     /**
      * commit - Overloading default method
      */
-    public function commit() {
-        $result =  $this->connection->commit();
+    public function commit()
+    {
+        $result = $this->connection->commit();
         $this->activeTransaction = false;
         return $result;
     }
@@ -234,7 +279,8 @@ class DUtils extends SmsAlert{
     /**
      * rollback - Overloading default method
      */
-    public function rollback() {
+    public function rollback()
+    {
         $this->connection->rollback();
         $this->activeTransaction = false;
     }
@@ -244,7 +290,8 @@ class DUtils extends SmsAlert{
      *
      * @return void
      **/
-    public function generate_orderCode(){
+    public function generate_orderCode()
+    {
         $cstrong = time();
         $bytes = openssl_random_pseudo_bytes(10, $cstrong);
         $hex = bin2hex($bytes);
@@ -253,47 +300,60 @@ class DUtils extends SmsAlert{
         return str_pad(dechex($unqstring), 8, '0', STR_PAD_LEFT);
     }
 
-    public function log($id, $_activity, $_msg){
+    public function log($id, $_activity, $_msg)
+    {
         // change to suite your log table
-        $this->query('INSERT INTO user_log(user_id, activity) VALUES(?,?)', $id, $_activity.' : '.$_msg);
+        $this->query(
+            'INSERT INTO user_log(user_id, activity) VALUES(?,?)',
+            $id,
+            $_activity . ' : ' . $_msg
+        );
     }
 
     //sanitizing a string
-    public function sanitize_string($data){
+    public function sanitize_string($data)
+    {
         $string = trim(addslashes(filter_var($data, FILTER_SANITIZE_STRING)));
         return preg_replace('/\s+/', '', $string);
     }
 
     //validating email
-    public function validate_email($data){
+    public function validate_email($data)
+    {
         return filter_var($data, FILTER_VALIDATE_EMAIL);
     }
 
     //generate random numbers.. can be use for forget password
-    public function generate($length = 4){
-        return substr(str_shuffle("0123456789"), 0, $length);
+    public function generate($length = 4)
+    {
+        return substr(str_shuffle('0123456789'), 0, $length);
     }
 
     //for generating qr codes
-    public function qr_code($data){
-        $this->qr_code = 'https://chart.googleapis.com/chart?cht=qr&chs=200x200&chl='.$data;
+    public function qr_code($data)
+    {
+        $this->qr_code =
+            'https://chart.googleapis.com/chart?cht=qr&chs=200x200&chl=' .
+            $data;
     }
 
     // generate card number
-    public function generate_card(){
-        $prefix = "INTERN/";
+    public function generate_card()
+    {
+        $prefix = 'INTERN/';
         $year = date('y/');
-        $num = substr(str_shuffle("01234567899876543210"), 0, 4);
-        return $this->card_num = strtoupper($prefix.$year.$num);
+        $num = substr(str_shuffle('01234567899876543210'), 0, 4);
+        return $this->card_num = strtoupper($prefix . $year . $num);
     }
 
     /**
-     * for displaying alert messages.... 
+     * for displaying alert messages....
      * Using Argon bootstrap
      * change to suit your css styles or css framework
      */
 
-    public function alert($message, $type){
+    public function alert($message, $type)
+    {
         switch ($type) {
             case 'error':
                 return '<div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -301,7 +361,9 @@ class DUtils extends SmsAlert{
                     <i class="tim-icons icon-simple-remove"></i>
                 </button>
                 <span data-notify="icon" class="tim-icons icon-trophy"></span>
-                <span><b> Heads up! - </b> '.$message.'</span>
+                <span><b> Heads up! - </b> ' .
+                    $message .
+                    '</span>
                  </div>';
                 break;
             case 'success':
@@ -310,49 +372,72 @@ class DUtils extends SmsAlert{
                     <i class="tim-icons icon-simple-remove"></i>
                 </button>
                 <span data-notify="icon" class="tim-icons icon-trophy"></span>
-                <span><b> Heads up! - </b> '.$message.'</span>
+                <span><b> Heads up! - </b> ' .
+                    $message .
+                    '</span>
                  </div>';
             default:
-                
                 break;
         }
-     
     }
 
     /** for hashing password
-     * 
+     *
      * In this case, we want to increase the default cost for BCRYPT to 12.
      * Note that we also switched to BCRYPT, which will always be 60 characters.
      */
-    public function passHash($password){
-            $options = [
-                'cost' => 12,
-            ];
-       return $passwordHash = password_hash($password, PASSWORD_BCRYPT, $options); 
+    public function passHash($password)
+    {
+        $options = [
+            'cost' => 12,
+        ];
+        return $passwordHash = password_hash(
+            $password,
+            PASSWORD_BCRYPT,
+            $options
+        );
     }
 
-    public function passVerify($password, $hash){
-       return $passVerify = (password_verify($password, $hash)) ? true : false ;
+    public function passVerify($password, $hash)
+    {
+        return $passVerify = password_verify($password, $hash) ? true : false;
     }
 
-     /**
+    /**
      * @return mixed
      */
-    public function get_ip(){
-        if(function_exists('apache_request_headers')){
+    public function get_ip()
+    {
+        if (function_exists('apache_request_headers')) {
             $headers = apache_request_headers();
-        } else{
+        } else {
             $headers = $_SERVER;
         }
 
-        if(array_key_exists('X-Forwarded-For', $headers) &&
-                filter_var($headers['X-Forwarded-For'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)){
+        if (
+            array_key_exists('X-Forwarded-For', $headers) &&
+            filter_var(
+                $headers['X-Forwarded-For'],
+                FILTER_VALIDATE_IP,
+                FILTER_FLAG_IPV4
+            )
+        ) {
             $the_ip = $headers['X-Forwarded-For'];
-        } elseif(array_key_exists('HTTP_X_FORWARDED_FOR', $headers) &&
-                filter_var($headers['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)){
+        } elseif (
+            array_key_exists('HTTP_X_FORWARDED_FOR', $headers) &&
+            filter_var(
+                $headers['HTTP_X_FORWARDED_FOR'],
+                FILTER_VALIDATE_IP,
+                FILTER_FLAG_IPV4
+            )
+        ) {
             $the_ip = $headers['HTTP_X_FORWARDED_FOR'];
-        } else{
-            $the_ip = filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4);
+        } else {
+            $the_ip = filter_var(
+                $_SERVER['REMOTE_ADDR'],
+                FILTER_VALIDATE_IP,
+                FILTER_FLAG_IPV4
+            );
         }
 
         return $the_ip;
@@ -362,20 +447,25 @@ class DUtils extends SmsAlert{
      * @param $data
      * @param null $filename
      */
-    public static function createCSV($data, $filename = null){
-        if(!isset($filename)){
-            $filename = "replies";
+    public static function createCSV($data, $filename = null)
+    {
+        if (!isset($filename)) {
+            $filename = 'replies';
         }
 
         //Clear output buffer
         ob_clean();
 
         //Set the Content-Type and Content-Disposition headers.
-        header("Content-type: text/x-csv");
-        header("Content-Transfer-Encoding: binary");
-        header("Content-Disposition: attachment; filename={$filename}-".date('YmdHis',strtotime('now')).".csv");
-        header("Pragma: no-cache");
-        header("Expires: 0");
+        header('Content-type: text/x-csv');
+        header('Content-Transfer-Encoding: binary');
+        header(
+            "Content-Disposition: attachment; filename={$filename}-" .
+                date('YmdHis', strtotime('now')) .
+                '.csv'
+        );
+        header('Pragma: no-cache');
+        header('Expires: 0');
 
         //Open up a PHP output stream using the function fopen.
         $fp = fopen('php://output', 'w');
@@ -396,15 +486,18 @@ class DUtils extends SmsAlert{
      *
      * @return int
      */
-    public static function hash_cost(){
+    public static function hash_cost()
+    {
         $timeTarget = 0.05;
         $cost = 8;
-        do{
+        do {
             $cost++;
             $start = microtime(true);
-            password_hash("diyframeworktest", PASSWORD_BCRYPT, ["cost" => $cost]);
+            password_hash('diyframeworktest', PASSWORD_BCRYPT, [
+                'cost' => $cost,
+            ]);
             $end = microtime(true);
-        } while(($end - $start) < $timeTarget);
+        } while ($end - $start < $timeTarget);
 
         return $cost;
     }
@@ -416,7 +509,8 @@ class DUtils extends SmsAlert{
      * @param string $passphrase
      * @return base64 encrypted data
      */
-    public static function encrypt($data, $passphrase){
+    public static function encrypt($data, $passphrase)
+    {
         // Set a random salt
         $salt = openssl_random_pseudo_bytes(16);
 
@@ -424,40 +518,47 @@ class DUtils extends SmsAlert{
         $dx = '';
         // Salt the key(32) and iv(16) = 48
         while (strlen($salted) < 48) {
-        $dx = hash('sha256', $dx.$passphrase.$salt, true);
-        $salted .= $dx;
+            $dx = hash('sha256', $dx . $passphrase . $salt, true);
+            $salted .= $dx;
         }
 
         $key = substr($salted, 0, 32);
-        $iv  = substr($salted, 32,16);
+        $iv = substr($salted, 32, 16);
 
-        $encrypted_data = openssl_encrypt($data, 'AES-256-CBC', $key, true, $iv);
+        $encrypted_data = openssl_encrypt(
+            $data,
+            'AES-256-CBC',
+            $key,
+            true,
+            $iv
+        );
         return base64_encode($salt . $encrypted_data);
     }
 
     /**
      * decrypt AES 256
-    *
-    * @param data $edata
-    * @param string $password
-    * @return decrypted data
-    */
-    public static function decrypt($edata, $passphrase){
+     *
+     * @param data $edata
+     * @param string $password
+     * @return decrypted data
+     */
+    public static function decrypt($edata, $passphrase)
+    {
         $data = base64_decode($edata);
         $salt = substr($data, 0, 16);
         $ct = substr($data, 16);
 
         $rounds = 3; // depends on key length
-        $data00 = $passphrase.$salt;
-        $hash = array();
+        $data00 = $passphrase . $salt;
+        $hash = [];
         $hash[0] = hash('sha256', $data00, true);
         $result = $hash[0];
         for ($i = 1; $i < $rounds; $i++) {
-            $hash[$i] = hash('sha256', $hash[$i - 1].$data00, true);
+            $hash[$i] = hash('sha256', $hash[$i - 1] . $data00, true);
             $result .= $hash[$i];
         }
         $key = substr($result, 0, 32);
-        $iv  = substr($result, 32,16);
+        $iv = substr($result, 32, 16);
 
         return openssl_decrypt($ct, 'AES-256-CBC', $key, true, $iv);
     }
@@ -473,33 +574,43 @@ class DUtils extends SmsAlert{
      * @param array $attr Optional, additional key/value attributes to include in the IMG tag
      * @return String containing either just a URL or a complete image tag
      */
-    public static function gravatar($email, $size = 80, $imageset = 'mp', $rating = 'g', $tag = false, $attr = array()){
+    public static function gravatar(
+        $email,
+        $size = 80,
+        $imageset = 'mp',
+        $rating = 'g',
+        $tag = false,
+        $attr = []
+    ) {
         $url = 'https://www.gravatar.com/avatar/';
-        $url .= md5( strtolower( trim( $email ) ) );
+        $url .= md5(strtolower(trim($email)));
         $url .= "?s=$size&d=$imageset&r=$rating";
 
         if ($tag) {
             $url = '<img src="' . $url . '"';
-            foreach ( $attr as $key => $val ) $url .= ' ' . $key . '="' . $val . '"';
+            foreach ($attr as $key => $val) {
+                $url .= ' ' . $key . '="' . $val . '"';
+            }
             $url .= ' />';
         }
 
         return $url;
     }
 
-    public function clean($string) {
+    public function clean($string)
+    {
         $string = str_replace(' ', '-', $string); // Replaces all spaces with hyphens.
-     
-        return preg_replace('/[^A-Za-z0-9-\-]/', '', $string); // Removes special chars.
-     }
 
-     public function validate_phone($phone){
-        if(!preg_match('/^[0-9]{10}+$/', $phone)){
+        return preg_replace('/[^A-Za-z0-9-\-]/', '', $string); // Removes special chars.
+    }
+
+    public function validate_phone($phone)
+    {
+        if (!preg_match('/^[0-9]{10}+$/', $phone)) {
             return false;
-        }else{
+        } else {
             return true;
         }
-     }
-
+    }
 }
 ?>
