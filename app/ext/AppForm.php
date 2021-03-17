@@ -75,6 +75,20 @@ class AppForm extends DUtils
             return false;
         }
     }
+
+    // fetch level training
+    public function traineeLevel()
+    {
+        try {
+            $this->traineeLevel = $this->query(
+                'SELECT * FROM farms.level_train'
+            )->fetchAll();
+            // $this->debug($this->traineeStatus);
+            return count($this->traineeLevel) > 0 ? $this->traineeLevel : false;
+        } catch (\Throwable $th) {
+            return false;
+        }
+    }
 }
 
 ?>

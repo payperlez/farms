@@ -3,7 +3,7 @@
 <body class="form-v10">
 	<div class="page-content">
 		<div class="form-v10-content">
-			<form class="form-detail" action="#" method="post" id="myform">
+			<form class="form-detail" action="" method="post" id="myform">
 				<div class="form-left">
 					<h2>Farmer Registration</h2>
 
@@ -31,14 +31,14 @@
 						<div class="form-row form-row-4"><input type="button" value="Take Picture" id="alpha" onclick="takeSnapshot(this)" /></div>
 					</div>
 					<div class="form-row">
-						<input type="text" name="full_Name" class="full_Name" id="Full Name" placeholder="Full Name" required>
+						<input type="text" name="fname" class="full_Name" id="Full Name" placeholder="Full Name" required>
 					</div>
 					<div class="form-group">
 						<div class="form-row form-row-1">
 							<input type="number" name="age" class="age" id="age" placeholder="Age" required>
 						</div>
 						<div class="form-row form-row-4">
-							<select name="Gender">
+							<select name="gender">
 							    <option value="Gender">Gender</option>
 							    <option value="Male">Male</option>
 							    <option value="Female">Female</option>
@@ -49,7 +49,7 @@
 						</div>
 					</div>
 					<div class="form-row">
-						<input type="text" name="community" class="community" id="community" placeholder="Community" required>
+						<input type="text" name="comm" class="community" id="community" placeholder="Community" required>
 					</div>
 					<div class="form-row">
 						<select name="region">
@@ -60,7 +60,7 @@
 						</select>
 					</div>
 					<div class="form-row">
-						<select name="Household">
+						<select name="hhold">
 						    <option class="option" selected disabled>Select household Status</option>
 						    <option class="option" value="household_status">Household Status Head</option>
 						    <option class="option" value="household_status_support">Household Status Support</option>
@@ -73,7 +73,7 @@
 						<input type="number" name="dependents" class="dependents" id="dependents" placeholder="Number of dependents" required>
 					</div>
 					<div class="form-row">
-						<select name="marital Status">
+						<select name="marital">
 						    <option class="option" selected disabled>Marital Status</option>
 						    <option class="option" value="Married">Married</option>
 						    <option class="option" value="Single">Single</option>
@@ -86,7 +86,7 @@
 						</span>
 					</div>
 					<div class="form-row">
-						<select name="employment status">
+						<select name="empStatus">
 						    <option value="" selected disabled>Select employment Status</option>
 							{% for emp in emps %}
 						    <option value="{{ emp.id }}">{{ emp.status }}</option>
@@ -97,7 +97,7 @@
 						</span>
 					</div>
 					<div class="form-row">
-						<select name="edu_level">
+						<select name="eduLevel">
 						 <option class="option" value="" selected disabled>Select educational level</option>
 						{% for edu in eduLevel %}
 						    <option class="option" value="{{ edu.id }}">{{ edu.status }}</option>
@@ -114,14 +114,14 @@
 					<br>
 					<br>
 					<div class="form-row">
-						<input type="number" name="yrs in farming" class="yrs in farming" id="yrs in farming" placeholder="Years in Cocoa farming" required>
+						<input type="number" name="yrsfarm" class="yrs in farming" id="yrs in farming" placeholder="Years in Cocoa farming" required>
 					</div>
 					<div class="form-row">
-						<input type="text" name="source of income" class="source of income" id="source of income" placeholder="Other source of income" required>
+						<input type="text" name="srcincome" class="source of income" id="source of income" placeholder="Other source of income" required>
 					</div>
 				
 					<div class="form-row">
-						<select name="main language">
+						<select name="lang">
 						    <option selected disabled>Select main speaking Language</option>
 							{% for lang in language %}
 						    <option value="{{ lang.id }}">{{ lang.status }}</option>
@@ -132,14 +132,14 @@
 						</span>
 					</div>
 					<div class="form-row">
-						<input type="number" name="no. of farms" class="no. of farms" id="no. of farms" placeholder="Number of farms" required>
+						<input type="number" name="nofarms" class="no. of farms" id="no. of farms" placeholder="Number of farms" required>
 					</div>
 					<div  class="form-row" id="farms">
 						<input type="text" name="farm_1" id="farm_input" placeholder="Farm location">
 						<input type="button" id="addfarm" onclick="addFarm()" value="+" />
 					  </div>			
 					<div class="form-row">
-						<select name="trainee status">
+						<select name="traineeStatus">
 						    <option value="trainee status" selected disabled>Select trainee Status</option>
 							{% for trainee in trainees %}
 						    <option value="{{ tainee.id }}">{{ trainee.status }}</option>
@@ -150,24 +150,24 @@
 						</span>
 					</div>
 					<div class="form-row">
-						<select name="level of training">
-						    <option value="Level of training">Level of training</option>
-						    <option value="1st">1st</option>
-						    <option value="2nd">2nd</option>
-						    <option value="none">None</option>
+						<select name="trainLevel">
+						    <option selected disabled>Level of training</option>
+							{% for level in trainLevels %}
+						    <option value="{{ level.id }}">{{ level.status }}</option>
+							{% endfor %}
 						</select>
 						<span class="select-btn">
 						  	<i class="zmdi zmdi-chevron-down"></i>
 						</span>
 					</div>
 					<div class="form-row">
-						<input type="number" name="phone no." id="phone no." class="input-text" required pattern="{2,6}" placeholder="Phone No.">
+						<input type="number" name="phone" id="phone no." class="input-text" required pattern="{2,6}" placeholder="Phone No.">
 					</div>
 					<div class="form-row">
-						<input type="number" name="momo no." id="momo no." class="input-text" required pattern="{2,6}" placeholder="MoMo No.">
+						<input type="number" name="momo" id="momo no." class="input-text" required pattern="{2,6}" placeholder="MoMo No.">
 					</div>
 					<div class="form-row">
-						<input type="text" name="buying company" id="buying company" class="input-text"  placeholder="Cocoa buying company">
+						<input type="text" name="buycompany" id="buying company" class="input-text"  placeholder="Cocoa buying company">
 					</div>
 					<div class="form-checkbox">
 						<label class="container"><p>I do accept the <a href="#" class="text">Terms and Conditions</a> of Contract.</p>

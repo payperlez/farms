@@ -10,4 +10,5 @@ echo $view->render('home/index.twig', [
     'emps' => $appForm->empStatus,
     'language' => $appForm->language,
     'trainees' => $appForm->traineeStatus,
+    'trainLevels' => $appForm->traineeLevel,
 ]);
