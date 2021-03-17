@@ -4,3 +4,4 @@ $appForm->eduLevel();
 $appForm->region();
 $appForm->empStatus();
 $appForm->language();
+$appForm->traineeStatus();

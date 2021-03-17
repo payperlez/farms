@@ -59,6 +59,22 @@ class AppForm extends DUtils
             return false;
         }
     }
+
+    // fetch training status
+    public function traineeStatus()
+    {
+        try {
+            $this->traineeStatus = $this->query(
+                'SELECT * FROM farms.trainee'
+            )->fetchAll();
+            // $this->debug($this->traineeStatus);
+            return count($this->traineeStatus) > 0
+                ? $this->traineeStatus
+                : false;
+        } catch (\Throwable $th) {
+            return false;
+        }
+    }
 }
 
 ?>

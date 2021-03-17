@@ -9,4 +9,5 @@ echo $view->render('home/index.twig', [
     'regions' => $appForm->region,
     'emps' => $appForm->empStatus,
     'language' => $appForm->language,
+    'trainees' => $appForm->traineeStatus,
 ]);
