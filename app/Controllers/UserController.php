@@ -19,7 +19,9 @@ if ($_POST['register']) {
     ) {
         $fname = $_POST['fname'];
         $age = $_POST['age'];
+        $gender = $_POST['gender'];
         $comm = $_POST['comm'];
+        $region = $_POST['region'];
         $hhold = $_POST['hhold'];
         $dependents = $_POST['dependents'];
         $marital = $_POST['marital'];
@@ -34,7 +36,7 @@ if ($_POST['register']) {
         $phone = $_POST['phone'];
         $momo = $_POST['momo'];
         $buycompany = $_POST['buycompany'];
-        echo $momo;
+        echo $region;
         die();
     }
 } else {
