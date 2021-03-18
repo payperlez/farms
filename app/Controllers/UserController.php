@@ -18,7 +18,23 @@ if ($_POST['register']) {
         !empty($_POST['empStatus'])
     ) {
         $fname = $_POST['fname'];
-        echo $fname;
+        $age = $_POST['age'];
+        $comm = $_POST['comm'];
+        $hhold = $_POST['hhold'];
+        $dependents = $_POST['dependents'];
+        $marital = $_POST['marital'];
+        $empStatus = $_POST['empStatus'];
+        $eduLevel = $_POST['eduLevel'];
+        $yrsfarm = $_POST['yrsfarm'];
+        $srcincome = $_POST['srcincome'];
+        $lang = $_POST['lang'];
+        $nofarms = $_POST['nofarms'];
+        $traineeStatus = $_POST['traineeStatus'];
+        $trainLevel = $_POST['trainLevel'];
+        $phone = $_POST['phone'];
+        $momo = $_POST['momo'];
+        $buycompany = $_POST['buycompany'];
+        echo $momo;
         die();
     }
 } else {
