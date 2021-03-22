@@ -1,5 +1,6 @@
 <?php
 $appForm = new AppForm();
+$farmer = new Farmer();
 $appForm->eduLevel();
 $appForm->region();
 $appForm->empStatus();
@@ -36,8 +37,27 @@ if ($_POST['register']) {
         $phone = $_POST['phone'];
         $momo = $_POST['momo'];
         $buycompany = $_POST['buycompany'];
-        echo $region;
-        die();
+        $farmer->registerFarmer(
+            $fname,
+            $age,
+            $gender,
+            $comm,
+            $region,
+            $hhold,
+            $dependents,
+            $marital,
+            $empStatus,
+            $eduLevel,
+            $yrsfarm,
+            $srcincome,
+            $lang,
+            $nofarms,
+            $traineeStatus,
+            $trainLevel,
+            $phone,
+            $momo,
+            $buycompany
+        );
     }
 } else {
     # code...
