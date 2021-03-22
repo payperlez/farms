@@ -37,6 +37,8 @@ if ($_POST['register']) {
         $phone = $_POST['phone'];
         $momo = $_POST['momo'];
         $buycompany = $_POST['buycompany'];
+        // echo $traineeStatus;
+        // die();
         $farmer->registerFarmer(
             $fname,
             $age,

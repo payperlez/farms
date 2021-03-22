@@ -46,7 +46,7 @@ class Farmer extends DUtils
                 $momo,
                 $buycompany
             );
-            if ($this->reggister) {
+            if ($this->register) {
                 die('inserted');
             }
         } catch (Exception $e) {

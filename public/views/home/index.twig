@@ -140,9 +140,9 @@
 					  </div>			
 					<div class="form-row">
 						<select name="traineeStatus">
-						    <option value="trainee status" selected disabled>Select trainee Status</option>
+						    <option selected disabled>Select trainee Status</option>
 							{% for trainee in trainees %}
-						    <option value="{{ tainee.id }}">{{ trainee.status }}</option>
+						    <option value="{{ trainee.id }}">{{ trainee.status }}</option>
 							{% endfor %}
 						</select>
 						<span class="select-btn">
