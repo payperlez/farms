@@ -1,6 +1,7 @@
 {% extends 'layout/layout.twig'%}
 {% block content %}
 <body class="form-v10">
+	{{ message | raw }}
 	<div class="page-content">
 		<div class="form-v10-content">
 			<form class="form-detail" action="" method="post" id="myform">
@@ -55,7 +56,7 @@
 						<select name="region">
 						    <option class="option" selected disabled>Select region</option>
 							{% for region in regions %}
-						    <option class="option" value="{{ region.regionid }}">{{ region.region }}</option>
+						    <option class="option" value="{{ region.region_code }}">{{ region.region }}</option>
 							{% endfor %}
 						</select>
 					</div>

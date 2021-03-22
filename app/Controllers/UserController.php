@@ -60,6 +60,7 @@ if ($_POST['register']) {
             $momo,
             $buycompany
         );
+        $message = $farmer->alert;
     }
 } else {
     # code...

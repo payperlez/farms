@@ -47,10 +47,24 @@ class Farmer extends DUtils
                 $buycompany
             );
             if ($this->register) {
-                die('inserted');
+                $this->alert =
+                    '<script> alert(" Inserted successfully ")</script>';
             }
         } catch (Exception $e) {
             //throw $th;
+        }
+    }
+
+    // farm id generator
+    public function farmerId()
+    {
+        try {
+            $prefix = 'INTERN/';
+            $year = date('y/');
+            $num = substr(str_shuffle('01234567899876543210'), 0, 4);
+            return $this->card_num = strtoupper($prefix . $year . $num);
+        } catch (\Throwable $th) {
+            return false;
         }
     }
 }
