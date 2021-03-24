@@ -7,17 +7,17 @@
 
   <!-- Each sheet element should have the class "sheet" -->
   <!-- "padding-**mm" is optional: you can set 10, 15, 20 or 25 -->
+      <input type='file' accept='image/*' onchange='openFile(event)' style="float:right"> 
   <section class="sheet padding-10mm">
 
     <!-- Write HTML just like a web page -->
     <article>
-    <h1 style="text-align: center; font-size:large;">COLLABORATION AGREEMENT BETWEEN
-      TASTE COCOA GHANA LIMITED AND
-      COCOA FARMERS</h1>
-      <p>This AGREEMENT is made on the day and year _________________________________________ between</p>
+    <h1 style="font-size:large;">COLLABORATION AGREEMENT BETWEEN TASTE COCOA GHANA LIMITED AND COCOA FARMERS</h1><img id='output' height="150px" width="150px" style="float:right">
+      <br>
+      <p>This AGREEMENT is made on the day and year    <span style="border-bottom:2px solid black"><b>{{ print.date }}</b></span> between</p>
       <p>Taste Cocoa Ghana Limited with its registered address of Second Martey Tsuru Link No. 17, East Airport, Accra, P.O. BOX AH 222 Achimota Accra, Ghana (hereinafter referred to as “THE COMPANY”).</p>
       <p>and</p>
-      <p>________________________________________________________________________
+      <p><span style="border-bottom:2px solid black;"><b>{{ print.fname }}</b></span>
         A small scale, medium to large cocoa plantation farmer who earns their living from growing and
         selling cocoa beans and most recently cocoa pulp juice (hereinafter referred to as “<b>THE COCOA
         FARMER</b>”).
@@ -62,17 +62,49 @@
         The Company or the cocoa farmer will have to give notice in writing/phone call one-month (30 days’) notice before
         terminating the agreement.
       </li>
+      <br>
+      <div style="float: left;">
+        <b>THE COMPANY</b>
+      <p>TASTE COCOA GHANA LIMITED</p>
+      <p>P.O.Box AH 222 Achimota Accra</p>
+      <p>Phone Number: 0201833494</p>
+      <br>
+      <p>____________________________</p>
+      <p><i>(Director of Operation)</i></p>
+      </div>
+      <div style="float: right;">
+        <b>THE COCOA FARMER</b>
+      <p>Name:<span style="border-bottom:1px solid black;"> {{ print.fname }}</span></p>
+      <p>Gender:<span style="border-bottom:1px solid black;">{{ print.gender }}</span></p>
+      <p>Phone:<span style="border-bottom:1px solid black;"> {{ print.phone }}</span></p>
+      <p>Mobile Money Number:<span style="border-bottom:1px solid black;"> {{ print.momo }}</span></p>
+      <p>Farmer ID :<span style="border-bottom:1px solid black;"> {{ print.farmerId }}</span></p>
+      {# <p>Farm Community:  ____________________________________</p> #}
+      <p>Region: <span style="border-bottom:1px solid black;"> {{ print.region }}</span></p>
+      <br>
+      <br>
+      <p>____________________________</p>
+      <p><i>(Farmer)</i></p>
+      </div>
+      
     </article>
 
   </section>
- <input type="button" value="Print" id="alpha" 
- style="margin: 0;
- position: absolute;
- left: 50%;
- margin-right: -50%;
- transform: translate(-50%, -50%)"/>
 
 </body>
 
+<script>
+  var openFile = function(file) {
+    var input = file.target;
+
+    var reader = new FileReader();
+    reader.onload = function(){
+      var dataURL = reader.result;
+      var output = document.getElementById('output');
+      output.src = dataURL;
+    };
+    reader.readAsDataURL(input.files[0]);
+  };
+</script>
 </html>
 {% endblock %}

@@ -55,8 +55,23 @@ class Farmer extends DUtils
                 $buycompany
             );
             if ($this->register) {
+                $date = date('d-m-Y');
+
+                $print = [
+                    'date' => $date,
+                    'fname' => $fname,
+                    'gender' => $gender,
+                    'phone' => $phone,
+                    'momo' => $momo,
+                    'farmerId' => $farmerId,
+                    'region' => $region,
+                ];
+
+                Session::set('print', $print);
+                // print_r(Session::get('print'));
+                // die();
                 $this->alert =
-                    '<script> alert(" Inserted successfully ")</script>';
+                    "<script> window.location.replace('print.php')</script>";
             }
         } catch (Exception $e) {
             //throw $th;
